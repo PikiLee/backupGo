@@ -3,9 +3,9 @@ from tkinter.ttk import *
 from tkinter import filedialog
 from components.file_selector import FileSelector
 from components.base_component import BaseComponent
-from encrypt import encrypt
-from decrypt import decrypt
-from utils import readEncryptionPaths, saveEncryptionPaths
+from scripts.encrypt import encrypt
+from scripts.decrypt import decrypt
+from scripts.utils import readEncryptionPaths, saveEncryptionPaths
 
 
 class App(BaseComponent):

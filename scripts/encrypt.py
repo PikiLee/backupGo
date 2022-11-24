@@ -5,7 +5,7 @@ import sys
 import datetime
 import pathlib
 from cryptography.fernet import Fernet
-from utils import exitIfPathNotExists, getFnet
+from .utils import exitIfPathNotExists, getFnet
 
 
 def encrypt(input_p, output_d):

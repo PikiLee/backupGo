@@ -1,5 +1,5 @@
 from cryptography.fernet import Fernet
-from utils import exitIfPathNotExists, getFnet
+from .utils import exitIfPathNotExists, getFnet
 import pathlib
 import sys
 
