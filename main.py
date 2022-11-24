@@ -9,7 +9,7 @@ from encrypt import encrypt
 class App(BaseComponent):
     def __init__(self, root):
         root.title("backupGo")
-        root.geometry("600x400")
+        root.geometry("600x200")
 
         main_frame = Frame(root)
         self.get_full_width(main_frame, root, 10)
@@ -24,7 +24,7 @@ class App(BaseComponent):
         decrypt_frame = Frame(main_notebook)
         self.get_full_width(decrypt_frame, main_notebook)
 
-        main_notebook.add(encrypt_frame, text="加密")
+        main_notebook.add(encrypt_frame, text="备份")
         main_notebook.add(decrypt_frame, text="解密")
 
         self.input_path = StringVar()
@@ -34,20 +34,21 @@ class App(BaseComponent):
         FileSelector(encrypt_frame, self.output_path, "输出目录",
                      column=55, row=60, allow_types=["dir"])
 
-        self.error = StringVar(value="good")
+        self.error = StringVar()
         errorLabel = Label(encrypt_frame, text=self.error.get(), textvariable=self.error)
-        errorLabel.grid(column=55, row=63, columnspan=3)
+        errorLabel.grid(column=55, row=63, columnspan=3, rowspan=3)
 
         confirmButton = Button(
-            encrypt_frame, text="开始加密",  command=self.backup)
-        confirmButton.grid(column=56, row=65)
+            encrypt_frame, text="开始加密备份",  command=self.backup)
+        confirmButton.grid(column=56, row=70, columnspan=2)
 
     def backup(self):
         try:
+            self.error.set("")
             self.error.set("开始加密备份")
             encrypt(self.input_path.get(), self.output_path.get())
             self.error.set("备份成功")
-        except error: 
+        except Exception as error: 
             self.error.set(error)
         
 
