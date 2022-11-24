@@ -2,6 +2,7 @@ import sys
 import pathlib
 import os
 from cryptography.fernet import Fernet
+from .generate_keys import genKey
 
 pathFilenames = {"en": "enpath", "de": "depath"}
 
@@ -9,25 +10,27 @@ pathFilenames = {"en": "enpath", "de": "depath"}
 def exitIfPathNotExists(path, type="dir"):
     exit = False
     if type == "dir" and not path.is_dir():
-        print(f"The path {path} is not a directory.")
+        message = f"{path} 不是文件"
         exit = True
     if type != "dir" and not path.is_file():
-        print(f"The path {path} is not a file.")
+        message = f"{path} 不是目录"
         exit = True
     if not path.exists():
-        print(f"The path {path} does not exist.")
+        message = f"{path} 不存在"
         exit = True
 
     if exit:
-        sys.exit(1)
-
+        raise Exception(message)
 
 def getFnet():
     print("Reading Key...")
     key_path = pathlib.Path("key").resolve()
-    exitIfPathNotExists(key_path, "file")
-    with open(key_path) as f:
-        key = f.read()
+
+    if not key_path.exists():
+        key = genKey()
+    else:
+        with open(key_path) as f:
+            key = f.read()
 
     fnet = Fernet(key)
     print("Key readed.")

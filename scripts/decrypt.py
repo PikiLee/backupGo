@@ -5,6 +5,8 @@ import sys
 
 def decrypt(input_p, output_d):
     print("Decrytion starts.")
+    if not input_p or not output_d:
+        raise Exception("地址不能为空")
 
     input_file = pathlib.Path(input_p).resolve()
     exitIfPathNotExists(input_file, "file")

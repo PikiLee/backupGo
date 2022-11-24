@@ -10,6 +10,10 @@ from .utils import exitIfPathNotExists, getFnet
 
 def encrypt(input_p, output_d):
     print("Encryption starts.")
+
+    if not input_p or not output_d:
+        raise Exception("地址不能为空")
+
     input_path = pathlib.Path(input_p).resolve()
     temp_dir = pathlib.Path("temp").resolve()
     
