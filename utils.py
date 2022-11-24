@@ -1,4 +1,4 @@
-import sys, pathlib
+import sys, pathlib, os
 from cryptography.fernet import Fernet
 
 
@@ -28,3 +28,24 @@ def getFnet():
     fnet = Fernet(key)
     print("Key readed.")
     return fnet
+
+def readEncryptionPaths():
+    path = pathlib.Path("enpath").resolve()
+    if not path.exists():
+        return None
+    else:
+        with open(path) as f:
+            input_path = f.readline()
+            output_path = f.readline()
+
+        return (input_path, output_path)
+
+
+def saveEncryptionPaths(input_path, output_path):
+    path = pathlib.Path("enpath").resolve()
+    if path.exists():
+        os.remove(path)
+    with open(path, "w") as f:
+        f.write(input_path + "\n")
+        f.write(output_path + "\n")
+

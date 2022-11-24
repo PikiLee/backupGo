@@ -4,6 +4,7 @@ from tkinter import filedialog
 from components.file_selector import FileSelector
 from components.base_component import BaseComponent
 from encrypt import encrypt
+from utils import readEncryptionPaths, saveEncryptionPaths
 
 
 class App(BaseComponent):
@@ -27,10 +28,15 @@ class App(BaseComponent):
         main_notebook.add(encrypt_frame, text="备份")
         main_notebook.add(decrypt_frame, text="解密")
 
-        self.input_path = StringVar()
-        FileSelector(encrypt_frame, self.input_path, "输入", column=55, row=55)
+        res = readEncryptionPaths()
+        if res:
+            self.input_path = StringVar(value=res[0])
+            self.output_path = StringVar(value=res[1])
+        else:
+            self.input_path = StringVar()
+            self.output_path = StringVar()
 
-        self.output_path = StringVar()
+        FileSelector(encrypt_frame, self.input_path, "输入", column=55, row=55)
         FileSelector(encrypt_frame, self.output_path, "输出目录",
                      column=55, row=60, allow_types=["dir"])
 
@@ -46,6 +52,7 @@ class App(BaseComponent):
         try:
             self.error.set("")
             self.error.set("开始加密备份")
+            saveEncryptionPaths(self.input_path.get(), self.output_path.get())
             encrypt(self.input_path.get(), self.output_path.get())
             self.error.set("备份成功")
         except Exception as error: 
