@@ -12,6 +12,7 @@ class App(BaseComponent):
     def __init__(self, root):
         root.title("backupGo")
         root.geometry("600x200")
+        root.iconbitmap("icon.ico")
 
         main_frame = Frame(root)
         self.get_full_width(main_frame, root, 10)
@@ -50,6 +51,9 @@ class App(BaseComponent):
         confirmButton = Button(
             encrypt_frame, text="开始加密备份",  command=self.backup)
         confirmButton.grid(column=56, row=70, columnspan=2)
+
+        infoLabel = Label(encrypt_frame, text="首次加密后，在软件安装目录里的key文件内查看密钥，请妥善保存。")
+        infoLabel.grid(column=55, row=75, columnspan=4)
 
         # Decryption Page
 
