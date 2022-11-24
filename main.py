@@ -4,6 +4,7 @@ from tkinter import filedialog
 from components.file_selector import FileSelector
 from components.base_component import BaseComponent
 from encrypt import encrypt
+from decrypt import decrypt
 from utils import readEncryptionPaths, saveEncryptionPaths
 
 
@@ -23,11 +24,13 @@ class App(BaseComponent):
         encrypt_frame.columnconfigure(56, weight=1)
 
         decrypt_frame = Frame(main_notebook)
-        self.get_full_width(decrypt_frame, main_notebook)
+        self.get_full_width(decrypt_frame, main_notebook, 25)
+        decrypt_frame.columnconfigure(56, weight=1)
 
         main_notebook.add(encrypt_frame, text="备份")
         main_notebook.add(decrypt_frame, text="解密")
-
+        
+        # Encryption Page
         res = readEncryptionPaths()
         if res:
             self.input_path = StringVar(value=res[0])
@@ -42,11 +45,33 @@ class App(BaseComponent):
 
         self.error = StringVar()
         errorLabel = Label(encrypt_frame, text=self.error.get(), textvariable=self.error)
-        errorLabel.grid(column=55, row=63, columnspan=3, rowspan=3)
+        errorLabel.grid(column=55, row=63, columnspan=4, rowspan=3)
 
         confirmButton = Button(
             encrypt_frame, text="开始加密备份",  command=self.backup)
         confirmButton.grid(column=56, row=70, columnspan=2)
+
+        # Decryption Page
+
+        res = readEncryptionPaths(type="de")
+        if res:
+            self.input_de_path = StringVar(value=res[0])
+            self.output_de_path = StringVar(value=res[1])
+        else:
+            self.input_de_path = StringVar()
+            self.output_de_path = StringVar()
+
+        FileSelector(decrypt_frame, self.input_de_path, "输入", column=55, row=55, allow_types=["file"])
+        FileSelector(decrypt_frame, self.output_de_path, "输出目录",
+                     column=55, row=60, allow_types=["dir"])
+
+        self.de_error = StringVar()
+        de_errorLabel = Label(decrypt_frame, text=self.de_error.get(), textvariable=self.de_error)
+        de_errorLabel.grid(column=55, row=63, columnspan=4, rowspan=3)
+
+        confirm_de_button = Button(
+            decrypt_frame, text="开始解密备份",  command=self.unbackup)
+        confirm_de_button.grid(column=55, row=70, columnspan=3)
 
     def backup(self):
         try:
@@ -58,6 +83,16 @@ class App(BaseComponent):
         except Exception as error: 
             self.error.set(error)
         
+    def unbackup(self):
+        try:
+            self.de_error.set("")
+            self.de_error.set("开始解密")
+            saveEncryptionPaths(self.input_de_path.get(), self.output_de_path.get(), type="de")
+            decrypt(self.input_de_path.get(), self.output_de_path.get())
+            self.de_error.set("解密成功")
+        except Exception as de_error: 
+            self.de_error.set(de_error)
+
 
 
 root = Tk()
